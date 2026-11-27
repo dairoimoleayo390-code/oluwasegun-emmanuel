@@ -51,6 +51,24 @@ export function ContactSection({
         body: JSON.stringify({ name, email, subject, message }),
       });
 
+      const contentType = response.headers.get('content-type') || '';
+      if (!contentType.includes('application/json')) {
+        // Static hosting fallback (e.g., GitHub Pages without Express backend)
+        const mailSubject = encodeURIComponent(`[Portfolio Inquiry] ${subject}`);
+        const mailBody = encodeURIComponent(
+          `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
+        );
+        window.location.href = `mailto:${contactSettings.email}?subject=${mailSubject}&body=${mailBody}`;
+        setStatusMessage(
+          `Opening your email app to send this inquiry directly to ${contactSettings.email}.`
+        );
+        setName('');
+        setEmail('');
+        setSubject('');
+        setMessage('');
+        return;
+      }
+
       const data = await response.json();
       if (!response.ok) {
         throw new Error(data.error || 'Unable to send your message.');

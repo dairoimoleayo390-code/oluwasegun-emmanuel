@@ -380,7 +380,7 @@ const DEFAULT_CONTACT_SETTINGS: ContactSettings = {
   whatsappHref: 'https://wa.me/2349165705882',
   linkedinLabel: 'linkedin.com/in/oluwasegun-emmanuel',
   linkedinHref: 'https://linkedin.com/in/oluwasegun-emmanuel',
-  githubHref: 'https://github.com',
+  githubHref: 'https://github.com/dairoimoleayo390-code',
 };
 
 export function getContactSettings(): ContactSettings {

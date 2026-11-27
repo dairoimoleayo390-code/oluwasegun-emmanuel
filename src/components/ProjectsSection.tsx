@@ -1,6 +1,7 @@
 import { ArrowUpRight, FolderKanban, Layers, SlidersHorizontal } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useMemo, useState } from 'react';
+import { resolveAssetUrl } from '../data/defaultProjects';
 import type { Project } from '../types/portfolio';
 
 interface ProjectsSectionProps {
@@ -29,7 +30,7 @@ function ProjectThumbnail({ project }: { project: Project }) {
 
   return (
     <img
-      src={project.imageUrl}
+      src={resolveAssetUrl(project.imageUrl)}
       alt={`${project.title} website mockup preview`}
       referrerPolicy="no-referrer"
       onError={() => setFailed(true)}

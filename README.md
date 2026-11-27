@@ -51,7 +51,17 @@ The Express server serves the compiled frontend from `dist/` and handles all `/a
 
 ## Independent Hosting Options
 
-### Option 1: Docker (Any Cloud or VPS)
+### Option 1: Publish Free on GitHub Pages (Public Link for Anyone)
+
+Your portfolio includes a ready-to-run GitHub Actions workflow (`.github/workflows/deploy.yml`) and automatically falls back to built-in project data and direct email links when hosted statically on GitHub Pages.
+
+1. Create a **public** repository on your GitHub account (`https://github.com/dairoimoleayo390-code`), for example `portfolio` (or `dairoimoleayo390-code.github.io`).
+2. Push this exported project to the `main` branch of that repository.
+3. In your GitHub repository, go to **Settings → Pages → Build and deployment → Source** and choose **GitHub Actions**.
+4. Once the workflow finishes, your live portfolio will be accessible to anyone at:
+   - `https://dairoimoleayo390-code.github.io/<your-repo-name>/` (or `https://dairoimoleayo390-code.github.io/` if you name the repository `dairoimoleayo390-code.github.io`).
+
+### Option 2: Docker (Any Cloud or VPS)
 
 ```bash
 docker build -t oluwasegun-portfolio .

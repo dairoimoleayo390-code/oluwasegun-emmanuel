@@ -1,5 +1,6 @@
 import { ArrowRight, CheckCircle2, ExternalLink, X } from 'lucide-react';
 import { useEffect } from 'react';
+import { resolveAssetUrl } from '../data/defaultProjects';
 import type { Project } from '../types/portfolio';
 
 interface ProjectModalProps {
@@ -44,7 +45,7 @@ export function ProjectModal({ project, onClose, onRequestSimilar }: ProjectModa
         <div className="border-b border-white/[0.08] bg-[#06080E]">
           {project.imageUrl ? (
             <img
-              src={project.imageUrl}
+              src={resolveAssetUrl(project.imageUrl)}
               alt={`${project.title} full presentation mockup`}
               referrerPolicy="no-referrer"
               className="aspect-video w-full object-cover"

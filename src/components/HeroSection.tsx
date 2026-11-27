@@ -1,6 +1,7 @@
 import { ArrowRight, Code2, Sparkles } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useState } from 'react';
+import { resolveAssetUrl } from '../data/defaultProjects';
 import { HERO_AVATAR_URL } from '../data/portfolioContent';
 import { TechBackground } from './TechBackground';
 
@@ -79,7 +80,7 @@ export function HeroSection({ projectCount }: HeroSectionProps) {
 
               {!imageError ? (
                 <img
-                  src={HERO_AVATAR_URL}
+                  src={resolveAssetUrl(HERO_AVATAR_URL)}
                   alt="Studio portrait of Oluwasegun Emmanuel, AI Web Developer"
                   referrerPolicy="no-referrer"
                   onError={() => setImageError(true)}
