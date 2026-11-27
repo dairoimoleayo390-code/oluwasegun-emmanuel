@@ -1,11 +1,106 @@
-<div align="center">
+# Oluwasegun Emmanuel — AI Web Developer Portfolio
 
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+Personal portfolio website for **Oluwasegun Emmanuel (AI Web Developer)**.
+> *"I Don't Just Build Websites. I Build Digital Experiences."*
 
-  <h1>Built with AI Studio</h2>
+## Overview
 
-  <p>The fastest path from prompt to production with Gemini.</p>
+This is a full-stack TypeScript web application built with React, Vite, Tailwind CSS, Express, and SQLite (`better-sqlite3`).
 
-  <a href="https://aistudio.google.com/apps">Start building</a>
+- **Portfolio Frontend**: Responsive sections covering Hero, About, Skills, Projects, Services, Development Tools, Why Work With Me, Testimonials, Contact Form, and Footer.
+- **Built-in Content Management**: Add, edit, or delete projects, inspect submitted inquiries, and update your email, WhatsApp, and LinkedIn details from the **Manage Projects** / **Edit Email & Links** dialog.
+- **Persistent SQLite Database**: Stores portfolio projects, contact settings, and client inquiries in `portfolio.db` (configurable via `DATA_DIR`).
+- **Optional Email Forwarding**: Automatically forwards contact form submissions via SMTP when `SMTP_*` environment variables are configured.
 
-</div>
+## Requirements
+
+- **Node.js 22.14+** (supports running `server.ts` natively with `node server.ts` in production)
+- **npm 10+**
+
+## Exporting & Local Setup
+
+1. **Export the project**
+   - Download the project archive or push this repository directly to your own GitHub / GitLab repository.
+   - Make sure local `.env` or `data/*.db` files are never committed (already configured in `.gitignore`).
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Configure environment variables**
+   ```bash
+   cp .env.example .env
+   ```
+   Edit `.env` to match your domain and optional Gmail SMTP credentials.
+
+4. **Run locally in development**
+   ```bash
+   npm run dev
+   ```
+   Open `http://localhost:3000`.
+
+## Production Build & Start
+
+```bash
+npm run build
+NODE_ENV=production npm start
+```
+
+The Express server serves the compiled frontend from `dist/` and handles all `/api/*` endpoints on port `3000` (or `process.env.PORT`).
+
+## Independent Hosting Options
+
+### Option 1: Docker (Any Cloud or VPS)
+
+```bash
+docker build -t oluwasegun-portfolio .
+docker run -d \
+  --name portfolio \
+  -p 3000:3000 \
+  -v portfolio_data:/app/data \
+  --env-file .env \
+  oluwasegun-portfolio
+```
+
+Mounting `/app/data` to a Docker volume ensures your projects, contact settings, and submitted inquiries persist across container updates.
+
+### Option 2: Render / Railway / Fly.io
+
+1. Push the exported codebase to a private or public Git repository.
+2. Connect the repository to your hosting provider:
+   - **Build Command**: `npm install && npm run build`
+   - **Start Command**: `node server.ts`
+3. Set environment variables:
+   - `NODE_ENV=production`
+   - `DATA_DIR=/var/data` (or the mount path of your host's persistent disk/volume)
+   - `CONTACT_TO_EMAIL=emmaoluwasegun100@gmail.com`
+   - Optional `SMTP_*` variables for email notifications
+4. Attach a **Persistent Disk / Volume** mounted at the same path as `DATA_DIR` so SQLite data survives redeploys.
+
+### Option 3: VPS (Ubuntu / Nginx / PM2)
+
+1. Install Node.js 22+ on your server and clone your repository.
+2. Run `npm ci && npm run build`.
+3. Start with PM2:
+   ```bash
+   NODE_ENV=production pm2 start server.ts --name oluwasegun-portfolio --interpreter node
+   pm2 save
+   ```
+4. Proxy port `80`/`443` to `http://127.0.0.1:3000` with Nginx and enable HTTPS using Certbot (`certbot --nginx`).
+
+## Enabling Gmail SMTP Notifications (Optional)
+
+To forward contact form messages directly to `emmaoluwasegun100@gmail.com`:
+
+1. Enable 2-Step Verification on your Google Account and generate a **Google App Password**.
+2. Set these variables in `.env` or your host's dashboard:
+   ```env
+   SMTP_HOST="smtp.gmail.com"
+   SMTP_PORT="587"
+   SMTP_SECURE="false"
+   SMTP_USER="emmaoluwasegun100@gmail.com"
+   SMTP_PASS="your-16-char-app-password"
+   CONTACT_TO_EMAIL="emmaoluwasegun100@gmail.com"
+   ```
+   All inquiries are also saved in the SQLite database regardless of whether SMTP is configured.
