@@ -17,6 +17,7 @@ export function ContactSection({
   const [email, setEmail] = useState('');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
+  const [botField, setBotField] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -53,7 +54,39 @@ export function ContactSection({
 
       const contentType = response.headers.get('content-type') || '';
       if (!contentType.includes('application/json')) {
-        // Static hosting fallback (e.g., GitHub Pages without Express backend)
+        // Try Netlify Forms submission when hosted statically on Netlify
+        const formBody = new URLSearchParams({
+          'form-name': 'contact',
+          'bot-field': botField,
+          name,
+          email,
+          subject,
+          message,
+        }).toString();
+
+        try {
+          const netlifyResponse = await fetch('/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: formBody,
+          });
+
+          if (netlifyResponse.ok) {
+            setStatusMessage(
+              'Thank you! Your message has been sent. Oluwasegun Emmanuel will get back to you soon.'
+            );
+            setName('');
+            setEmail('');
+            setSubject('');
+            setMessage('');
+            setBotField('');
+            return;
+          }
+        } catch {
+          // Fall through to mailto fallback if POST is blocked
+        }
+
+        // Static fallback for hosts that disallow POST (e.g., GitHub Pages)
         const mailSubject = encodeURIComponent(`[Portfolio Inquiry] ${subject}`);
         const mailBody = encodeURIComponent(
           `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
@@ -217,9 +250,25 @@ export function ContactSection({
           {/* Right Column: Backend-Connected Contact Form */}
           <div className="lg:col-span-7">
             <form
+              name="contact"
+              method="POST"
+              data-netlify="true"
+              data-netlify-honeypot="bot-field"
               onSubmit={handleSubmit}
               className="rounded-2xl border border-white/[0.08] bg-[#0B0E16]/90 p-6 backdrop-blur-md sm:p-8"
             >
+              <input type="hidden" name="form-name" value="contact" />
+              <p className="hidden" aria-hidden="true">
+                <label>
+                  Don’t fill this out if you’re human:{' '}
+                  <input
+                    name="bot-field"
+                    value={botField}
+                    onChange={(e) => setBotField(e.target.value)}
+                  />
+                </label>
+              </p>
+
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                 <div>
                   <label htmlFor="contact-name" className="block text-xs font-semibold text-slate-300">
@@ -227,6 +276,7 @@ export function ContactSection({
                   </label>
                   <input
                     id="contact-name"
+                    name="name"
                     type="text"
                     required
                     minLength={2}
@@ -244,6 +294,7 @@ export function ContactSection({
                   </label>
                   <input
                     id="contact-email"
+                    name="email"
                     type="email"
                     required
                     maxLength={160}
@@ -261,6 +312,7 @@ export function ContactSection({
                 </label>
                 <input
                   id="contact-subject"
+                  name="subject"
                   type="text"
                   required
                   minLength={3}
@@ -278,6 +330,7 @@ export function ContactSection({
                 </label>
                 <textarea
                   id="contact-message"
+                  name="message"
                   required
                   minLength={10}
                   maxLength={3000}
@@ -309,7 +362,7 @@ export function ContactSection({
 
               <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
                 <p className="text-xs text-slate-400">
-                  Submissions are validated and saved directly to the portfolio backend.
+                  Messages are delivered directly so I can get back to you promptly.
                 </p>
 
                 <button

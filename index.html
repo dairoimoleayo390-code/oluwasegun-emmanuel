@@ -65,6 +65,14 @@
   </head>
   <body class="bg-[#050508] text-slate-100 antialiased selection:bg-blue-600/30 selection:text-blue-200">
     <div id="root"></div>
+    <!-- Static form markup for Netlify Forms build-time detection -->
+    <form name="contact" netlify netlify-honeypot="bot-field" hidden>
+      <input type="text" name="bot-field" />
+      <input type="text" name="name" />
+      <input type="email" name="email" />
+      <input type="text" name="subject" />
+      <textarea name="message"></textarea>
+    </form>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
